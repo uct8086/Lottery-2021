@@ -1,0 +1,25 @@
+{
+    "restartable": "rs",
+    "ignore": [
+        ".git",
+        "node_modules/",
+        "doc/",
+        "public/",
+        "test/"
+    ],
+    "verbose": true,
+    "execMap": {
+        "js": "node"
+    },
+    "events": {
+        
+    },
+    "watch": [
+        "src/server/",
+        "app.js"
+    ],
+    "env": {
+        "NODE_ENV": "local"
+    },
+    "ext": "js json"
+}
