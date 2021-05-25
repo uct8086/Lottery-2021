@@ -8,7 +8,7 @@ const resource = require('koa-static');//静态资源托管
 const path = require('path');
 
 const routes = require('./src/server/routes/index.js');
-const config = require('./src/config/index.js');
+const config = require('./config/index.js');
  
 const app = new Koa();
 

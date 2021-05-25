@@ -1,12 +1,11 @@
-const utils = require('./utils');
 const webpack = require('webpack')
-const config = require('./../../config')
-const merge = require('webpack-merge')
+const config = require('../config')
+const { merge } = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-//const dis = process.argv[2];
-const urls = require('../client/common/urls/index');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const urls = require('../src/front/common/urls/index');
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -16,10 +15,18 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
 module.exports = merge(baseWebpackConfig, {
   mode: 'development',
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+    rules: [
+      {
+        test: /\.(c|le)ss$/,
+        use: [
+            'css-loader',
+            'less-loader',
+        ],
+      },
+    ]
   },
   // cheap-module-eval-source-map is faster for development
-  devtool: '#cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': config.dev.env
@@ -34,6 +41,7 @@ module.exports = merge(baseWebpackConfig, {
       inject: true,
       chunks: ['vendor', 'manifest', 'app']
     }),
-    // new FriendlyErrorsPlugin()
+    new FriendlyErrorsPlugin(),
+    new VueLoaderPlugin()
   ]
 })

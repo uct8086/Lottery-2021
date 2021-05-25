@@ -1,6 +1,6 @@
 require('./check-versions')()
 
-let config = require('./../../config')
+let config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
@@ -9,7 +9,7 @@ let opn = require('opn')
 let path = require('path')
 let express = require('express')
 let webpack = require('webpack')
-let proxyMiddleware = require('http-proxy-middleware')
+let { createProxyMiddleware } = require('http-proxy-middleware')
 let webpackConfig = require('./webpack.dev.conf')
 
 // default port where dev server listens for incoming traffic
@@ -25,19 +25,19 @@ let compiler = webpack(webpackConfig)
 
 let devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
-  quiet: true
+  // quiet: true
 })
 
 let hotMiddleware = require('webpack-hot-middleware')(compiler, {
   log: () => {}
 })
 // force page reload when html-webpack-plugin template changes
-compiler.plugin('compilation', function (compilation) {
-  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
-    // cb()
-  })
-})
+// compiler.plugin('compilation', function (compilation) {
+//   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
+//     hotMiddleware.publish({ action: 'reload' })
+//     // cb()
+//   })
+// })
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
@@ -45,7 +45,7 @@ Object.keys(proxyTable).forEach(function (context) {
   if (typeof options === 'string') {
     options = { target: options }
   }
-  app.use(proxyMiddleware(options.filter || context, options))
+  app.use(createProxyMiddleware(options.filter || context, options))
 })
 
 // handle fallback for HTML5 history API

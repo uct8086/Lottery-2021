@@ -1,6 +1,6 @@
 const path = require('path');
 let utils = require('./utils');
-const config = require('./../../config');
+const config = require('../config');
 const vueLoaderConfig = require('./vue-loader.conf');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 
@@ -12,7 +12,7 @@ function resolve(dir) {
 
 module.exports = {
     entry: {
-        app: [ `./src/front/client/modules/main.js`],
+        app: [ `./src/front/modules/main.js`],
     },
     target: ['web', 'es5'],
     output: {
@@ -20,7 +20,8 @@ module.exports = {
         filename: '[name].js',
         publicPath: process.env.NODE_ENV === 'production'
             ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+            : config.dev.assetsPublicPath,
+        clean: true,
     },
     resolve: {
         extensions: ['.js', '.vue', '.json', ".ts", ".tsx",".jsx"],
@@ -30,11 +31,11 @@ module.exports = {
         ],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': resolve('client'),
-            'assets': resolve('client/assets'),
-            'common': resolve('client/common'),
-            'modules': resolve('client/modules'),
-            'components': resolve('client/components'),
+            '@': resolve('src/front'),
+            'assets': resolve('src/front/assets'),
+            'common': resolve('src/front/common'),
+            'modules': resolve('src/front/modules'),
+            'components': resolve('src/front/components'),
         }
     },
     module: {
@@ -43,7 +44,7 @@ module.exports = {
                 test: /\.(js|vue)$/,
                 loader: 'eslint-loader',
                 enforce: "pre",
-                include: [resolve('client'), resolve('test')],
+                include: [resolve('src/front'), resolve('test')],
                 options: {
                     formatter: eslintFriendlyFormatter
                 }
@@ -53,20 +54,13 @@ module.exports = {
                 loader: 'vue-loader',
                 options: vueLoaderConfig
             },
-            // {
-            //     test: /\.js$/,
-            //     loader: 'babel-loader',
-            //     include: [resolve('client'), resolve('test')]
-            // },
             {
-                test: /\.js$/,
+                test: /\.m?js$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',    
+                    loader: "babel-loader",
                     options: {
-                        presets: [
-                            '@babel/preset-env'
-                        ]
+                        presets: ['@babel/preset-env']
                     }
                 }
             },
@@ -75,7 +69,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('image/[name].[fullhash].[ext]'),
+                    name: utils.assetsPath('image/[name].[chunkhash].[ext]'),
                     publicPath: '/',
                 },
             },
@@ -84,7 +78,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('fonts/[name].[fullhash].[ext]'),
+                    name: utils.assetsPath('fonts/[name].[chunkhash].[ext]'),
                     publicPath: '/',
                 }
             },
@@ -93,7 +87,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('media/[name].[fullhash].[ext]')
+                    name: utils.assetsPath('media/[name].[chunkhash].[ext]')
                 }
             },
         ]

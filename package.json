@@ -4,8 +4,8 @@
   "description": "a lottery research",
   "main": "index.js",
   "scripts": {
-    "start": "node src/front/build/dev-server.js",
-    "build": "node src/front/build/build.js",
+    "start": "node build/dev-server.js",
+    "build": "node build/build.js",
     "server": "nodemon app.js"
   },
   "author": "uct8086",
@@ -32,15 +32,16 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.5",
+    "@babel/core": "^7.14.3",
     "@babel/plugin-transform-modules-commonjs": "^7.12.1",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
-    "babel-loader": "^8.1.0",
     "autoprefixer": "^10.2.5",
+    "babel-loader": "^8.2.2",
     "bufferutil": "^4.0.3",
     "chalk": "^4.1.1",
     "compression-webpack-plugin": "^8.0.0",
+    "connect-history-api-fallback": "^1.6.0",
     "css-loader": "^5.2.5",
     "d3": "^6.7.0",
     "eslint": "^7.27.0",
@@ -68,8 +69,10 @@
     "shelljs": "^0.8.4",
     "terser-webpack-plugin": "^5.1.2",
     "utf-8-validate": "^5.0.5",
+    "vue-style-loader": "^4.1.3",
     "webpack": "^5.37.1",
     "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-dev-middleware": "^4.3.0",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-md5-hash": "^0.0.6",
     "webpack-merge": "^5.7.3"

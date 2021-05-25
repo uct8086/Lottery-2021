@@ -1,10 +1,11 @@
 const utils = require('./utils');
 const webpack = require('webpack');
-const config = require('./../../config');
+const config = require('../config');
 const { merge } = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 // const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 // const WebpackMd5Hash = require('webpack-md5-hash');
 
@@ -49,7 +50,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     devtool: config.build.productionSourceMap ? '#source-map' : false,
     output: {
         path: config.build.assetsRoot,
-        filename: utils.assetsPath('js/[fullhash].js'),
+        filename: utils.assetsPath('js/[chunkhash].js'),
         // chunkFilename: utils.assetsPath('js/[hash:7].js'),
         publicPath: './'  //用了DynamicPublicPathPlugin，这里用相对路径修复css里的otf引用
     },
@@ -61,7 +62,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         }),
         // extract css into its own file
         new MiniCssExtractPlugin({
-            filename: utils.assetsPath('css/[fullhash].css')
+            filename: utils.assetsPath('css/[chunkhash].css')
         }),
         // Compress extracted CSS. We are using this plugin so that possible
         // duplicated CSS from different components can be deduped.
@@ -86,7 +87,8 @@ const webpackConfig = merge(baseWebpackConfig, {
                 // https://github.com/kangax/html-minifier#options-quick-reference
             },
         }),
-    // new WebpackMd5Hash(),
+        // new WebpackMd5Hash(),
+        new VueLoaderPlugin()
     ]
 });
 

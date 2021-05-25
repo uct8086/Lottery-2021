@@ -1,6 +1,6 @@
 let chalk = require('chalk');
 let semver = require('semver');
-let packageConfig = require('./../../../package.json');
+let packageConfig = require('../package.json');
 let shell = require('shelljs');
 
 let versionRequirements = [
