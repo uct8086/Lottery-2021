@@ -1,8 +1,10 @@
 const path = require('path');
+const webpack = require('webpack');
 let utils = require('./utils');
-const config = require('../config');
+const config = require('./config');
 const vueLoaderConfig = require('./vue-loader.conf');
-const eslintFriendlyFormatter = require('eslint-friendly-formatter');
+const { VueLoaderPlugin } = require('vue-loader-v16');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 
 function resolve(dir) {
@@ -12,7 +14,7 @@ function resolve(dir) {
 
 module.exports = {
     entry: {
-        app: [ `./src/front/modules/main.js`],
+        app: [ `./client/modules/main.js`],
     },
     target: ['web', 'es5'],
     output: {
@@ -30,28 +32,19 @@ module.exports = {
             resolve('node_modules')
         ],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
-            '@': resolve('src/front'),
-            'assets': resolve('src/front/assets'),
-            'common': resolve('src/front/common'),
-            'modules': resolve('src/front/modules'),
-            'components': resolve('src/front/components'),
+            'vue': 'vue/dist/vue.esm-bundler.js',
+            '@': resolve('client'),
+            'assets': resolve('client/assets'),
+            'common': resolve('client/common'),
+            'modules': resolve('client/modules'),
+            'components': resolve('client/components'),
         }
     },
     module: {
         rules: [
             {
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                enforce: "pre",
-                include: [resolve('src/front'), resolve('test')],
-                options: {
-                    formatter: eslintFriendlyFormatter
-                }
-            },
-            {
                 test: /\.vue$/,
-                loader: 'vue-loader',
+                loader: 'vue-loader-v16',
                 options: vueLoaderConfig
             },
             {
@@ -69,8 +62,9 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('image/[name].[chunkhash].[ext]'),
+                    name: utils.assetsPath('image/[name].[ext]'),
                     publicPath: '/',
+                    esModule: false
                 },
             },
             {
@@ -78,7 +72,7 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('fonts/[name].[chunkhash].[ext]'),
+                    name: utils.assetsPath('fonts/[name].[ext]'),
                     publicPath: '/',
                 }
             },
@@ -87,9 +81,22 @@ module.exports = {
                 loader: 'file-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('media/[name].[chunkhash].[ext]')
+                    name: utils.assetsPath('media/[name].[ext]')
                 }
             },
         ]
-    }
+    },
+    plugins: [
+        new ESLintPlugin({
+            fix: true,
+            extensions: ['js', 'json', 'vue'],
+            exclude: '/node_modules/'
+        }),
+        //vue 3.x 增加了两个编译时配置：__VUE_OPTIONS_API__和__VUE_PROD_DEVTOOLS__，适当地配置它们能提高 tree shaking 的效果
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: JSON.stringify(true),
+            __VUE_PROD_DEVTOOLS__: JSON.stringify(false)
+        }),
+        new VueLoaderPlugin(),
+    ]
 };

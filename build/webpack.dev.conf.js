@@ -1,11 +1,11 @@
 const webpack = require('webpack')
-const config = require('../config')
+const config = require('./config')
 const { merge } = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const urls = require('../src/front/common/urls/index');
+// const VueLoaderPlugin = require('vue-loader-plugin');
+const urls = require('../client/common/urls/index');
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
@@ -19,7 +19,7 @@ module.exports = merge(baseWebpackConfig, {
       {
         test: /\.(c|le)ss$/,
         use: [
-            'vue-style-loader',
+             'vue-style-loader',
             'css-loader',
             'less-loader',
         ],
@@ -43,6 +43,6 @@ module.exports = merge(baseWebpackConfig, {
       chunks: ['vendor', 'manifest', 'app']
     }),
     new FriendlyErrorsPlugin(),
-    new VueLoaderPlugin()
+    // new VueLoaderPlugin()
   ]
 })
