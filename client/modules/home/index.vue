@@ -7,6 +7,12 @@
       >
         更新大乐透原始数据
       </button>
+      <button
+        class="el-button el-button--success"
+        @click="toDetail"
+      >
+        查找单个数字相关性
+      </button>
     </div>
     <div class="chart-zone">
       <div

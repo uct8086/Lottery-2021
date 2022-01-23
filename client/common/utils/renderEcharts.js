@@ -12,6 +12,7 @@ const countFrontHz = async (id, data, title) => {
     barOption.series[0].data = data;
     // 绘制图表
     myChart.setOption(barOption);
+    return myChart;
 }; 
 
 const countBackHz = async (id, data, title) => {
@@ -24,6 +25,7 @@ const countBackHz = async (id, data, title) => {
     barOption.series[0].data = data;
     // 绘制图表
     myChart.setOption(barOption);
+    return myChart;
 }; 
 
 export {
