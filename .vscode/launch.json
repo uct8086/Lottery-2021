@@ -5,8 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "test2",
-            "program": "${workspaceFolder}/test.js",
+            "name": "run server",
+            "program": "${workspaceFolder}/app.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "name": "dev-server",
+            "program": "${workspaceFolder}/build/dev-server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"

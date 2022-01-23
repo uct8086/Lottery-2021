@@ -13,8 +13,6 @@ const config = require('./build/config');
 
 const app = new Koa();
 
-const env = process.NODE_ENV || 'dev';
-
 onerror(app);
 
 app.use(historyApiFallback({ whiteList: ['/api'] }));

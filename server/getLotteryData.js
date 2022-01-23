@@ -39,16 +39,16 @@ class ForkLottery{
                     lotteryDrawNum,
                     lotteryDrawResult,
                     lotteryDrawTime,
-                })
+                });
             }
             this.page ++;
         } while (this.page <= this.pages);
         
-        fs.writeFileSync(`./data.json`, JSON.stringify(this.data));
+        fs.writeFileSync(`./server/data.json`, JSON.stringify(this.data));
     }
 }
 
-let ins = new ForkLottery();
-ins.start();
+module.exports = new ForkLottery();
+
 
 

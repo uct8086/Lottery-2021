@@ -4,7 +4,7 @@ const LiveHandler = require('../handler/liveHandler');
 
 // 设置项目路径
 router.post('/api/fetch_data', LiveHandler.fetchData);
-// router.post('/api/do_record', MainHandler.record);
+router.post('/api/update_origin_data', LiveHandler.updateOriginData);
 // router.post('/api/do_base', MainHandler.base);
 // router.post('/api/do_replay', MainHandler.replay);
 // router.post('/api/create_test_folder', MainHandler.createTestFolder);

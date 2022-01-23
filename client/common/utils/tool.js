@@ -111,6 +111,18 @@ const groupList = (list = [], size = 0) => {
     return resList;
 };
 
+const getTextNumber = (num) => {
+    let res = [];
+    for(let i=0;i<num;i++){
+        if(i + 1 < 10) {
+            res.push(`0${i + 1}`);
+        } else {
+            res.push(String(i + 1));
+        }
+    }
+    return res;
+};
+
 export {
     flattenArrayToObject,
     countText,
@@ -120,5 +132,6 @@ export {
     detectEnv,
     getCookie,
     getCostText,
-    groupList
+    groupList,
+    getTextNumber
 };

@@ -1,4 +1,4 @@
-import HttpHelper from "common/utils/axios_helper.js";
+import HttpHelper from "common/utils/axiosHelper.js";
 import { reactive, onMounted } from 'vue';
 export default {
     setup() {

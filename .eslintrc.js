@@ -29,7 +29,7 @@ module.exports = {
         "indent": ["error", 4, {
             "SwitchCase": 1
         }],
-        // "linebreak-style": ["error", "windows"],
+        "linebreak-style": ["error", "windows"],
         "semi": ["error", "always"],
         "comma-dangle": ["warn", {
             "arrays": "ignore",
@@ -41,11 +41,13 @@ module.exports = {
         "no-control-regex": "off",
         "comma-style": ["error", "last"],
         "computed-property-spacing": ["error", "never"],
-        "no-console": "off",
+        "no-console": "off", //["error", { "allow": ["warn", "error"] }],
+        "no-debugger": "off",
         "no-alert": "error",
         "no-dupe-args": "error",
         "no-duplicate-case": "error",
         "no-duplicate-imports": "error",
-        "no-empty": "error"
+        "no-empty": "error",
+        "vue/no-lone-template": "off"
     }
-}
+};
