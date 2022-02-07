@@ -5,7 +5,7 @@ const { merge } = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+// const VueLoaderPlugin = require('vue-loader/lib/plugin');
 // const CopyPlugin = require("copy-webpack-plugin");
 // const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 // const WebpackMd5Hash = require('webpack-md5-hash');
@@ -89,7 +89,7 @@ const webpackConfig = merge(baseWebpackConfig, {
             },
         }),
         // new WebpackMd5Hash(),
-        new VueLoaderPlugin(),
+        // new VueLoaderPlugin(),
         // new CopyPlugin({
         //     patterns: [
         //         { from: "./renderer.js", to: "./" },
