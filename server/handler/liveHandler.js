@@ -36,6 +36,9 @@ class LiveHandler{
 
             for (let i=0,len = data.length; i<len;i++) {
                 let list = data[i].lotteryDrawResult.split(" ");
+                if (list.includes("32")) {
+                    console.log(111);
+                }
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
                 let lotteryDrawResult = list.slice(0,5);

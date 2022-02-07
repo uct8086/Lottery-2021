@@ -3,17 +3,14 @@ const fs = require('fs');
 
 
 class ForkLottery{
-    constructor() {
-        this.page = 1;
-        this.pages = 2;
-        this.url = `https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=${this.page}`;
-        this.data = [];
-    }
 
     async start() {
+        let page = 1, pages = 75, data = [];
+        
         do{
+            let url = `https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=${page}`;
             let {pages, list} = await new Promise((resolve, reject) => {
-                request(this.url, (error, response, body) => {
+                request(url, (error, response, body) => {
                     if(error) {
                         return reject(error);
                     }
@@ -25,26 +22,28 @@ class ForkLottery{
                 });
             });
             if(!list) {
-                console.log(this.page);
+                console.log(page);
                 return;
             } else {
-                console.log(this.page, this.pages);
+                console.log(page, pages);
             }
-            this.pages = pages;
             for(let item of list){
                 let {lotteryDrawNum,
                     lotteryDrawResult,
                     lotteryDrawTime} = item;
-                this.data.push({
+                data.push({
                     lotteryDrawNum,
                     lotteryDrawResult,
                     lotteryDrawTime,
                 });
             }
-            this.page ++;
-        } while (this.page <= this.pages);
-        
-        fs.writeFileSync(`./server/data.json`, JSON.stringify(this.data));
+            page ++;
+        } while (page <= pages);
+        const dataPath = `./server/data.json`;
+        if (fs.existsSync(dataPath)) {
+            fs.rmSync(dataPath);
+        }
+        fs.writeFileSync(dataPath, JSON.stringify(data));
     }
 }
 
