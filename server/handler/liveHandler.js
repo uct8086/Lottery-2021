@@ -1,12 +1,12 @@
 const getLotteryData = require('../getLotteryData');
 
-class LiveHandler{
+class LiveHandler {
 
     static calculateHz(list, m) {
-        for(let j=0, jlen=list.length; j<jlen; j++) {
+        for (let j = 0, jlen = list.length; j < jlen; j++) {
             const num = list[j];
             let current = m.get(num);
-            if(!current) {
+            if (!current) {
                 m.set(num, 1);
             } else {
                 m.set(num, m.get(num) + 1);
@@ -16,7 +16,7 @@ class LiveHandler{
 
     static concatArr(m, num) {
         let temp = new Array(num).fill(0);
-        for(let [k,v] of m.entries()) {
+        for (let [k, v] of m.entries()) {
             temp[Number(k) - 1] = v;
         }
         return temp;
@@ -34,19 +34,19 @@ class LiveHandler{
             const mDay6 = new Map();
             const mDay62 = new Map();
 
-            for (let i=0,len = data.length; i<len;i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 let list = data[i].lotteryDrawResult.split(" ");
                 if (list.includes("32")) {
                     console.log(111);
                 }
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
-                let lotteryDrawResult = list.slice(0,5);
+                let lotteryDrawResult = list.slice(0, 5);
                 let backend = list.slice(5);
                 LiveHandler.calculateHz(lotteryDrawResult, m);
                 LiveHandler.calculateHz(backend, m2);
 
-                switch(isDay) {
+                switch (isDay) {
                     case 1:
                         LiveHandler.calculateHz(lotteryDrawResult, mDay1);
                         LiveHandler.calculateHz(backend, mDay12);
@@ -76,25 +76,36 @@ class LiveHandler{
             // 周六开奖统计
             const front6 = LiveHandler.concatArr(mDay6, 35);
             const back6 = LiveHandler.concatArr(mDay62, 12);
-            
-            ctx.body = {code: 0, data: {
-                front, 
-                back,
-                front1,
-                back1,
-                front3,
-                back3,
-                front6,
-                back6,
-            }};
+
+            ctx.body = {
+                code: 0, data: {
+                    front,
+                    back,
+                    front1,
+                    back1,
+                    front3,
+                    back3,
+                    front6,
+                    back6,
+                }
+            };
         } catch (e) {
-            ctx.body = {code:-1, msg: 'fetchData failed.'};
+            ctx.body = { code: -1, msg: 'fetchData failed.' };
         }
+    }
+
+    static isIncludes(str, targetList) {
+        const list = str.split('-') || [];
+        for (let i = 0, len = list.length; i < len; i++) {
+            const t = targetList.findIndex((item) => item === Number(list[i]));
+            if (t === -1) return false;
+        }
+        return true;
     }
 
     searchByParams(ctx, next) {
         try {
-            const {front: fr, back: ba} = ctx.request.body;
+            const { front: fr, back: ba } = ctx.request.body;
             let data = require('../data.json');
             const m = new Map();
             const m2 = new Map();
@@ -105,23 +116,28 @@ class LiveHandler{
             const mDay6 = new Map();
             const mDay62 = new Map();
 
-            for (let i=0,len = data.length; i<len;i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 let list = data[i].lotteryDrawResult.split(" ");
                 let temp = list.map(item => Number(item));
-                if (fr && !temp.slice(0,5).includes(Number(fr))) {
+                let lotteryDrawResult = temp.slice(0, 5);
+                let backend = temp.slice(5);
+                const frontValue = LiveHandler.isIncludes(fr, lotteryDrawResult);
+                // if (frontValue) console.log(frontValue, fr, lotteryDrawResult);
+                if (fr && !frontValue) {
                     continue;
                 }
-                if (ba && !temp.slice(5).includes(Number(ba))) {
+                const backValue = LiveHandler.isIncludes(ba, backend);
+                // if (backValue) console.log(backValue, ba, backend);
+                if (ba && !backValue) {
                     continue;
                 }
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
-                let lotteryDrawResult = list.slice(0,5);
-                let backend = list.slice(5);
+
                 LiveHandler.calculateHz(lotteryDrawResult, m);
                 LiveHandler.calculateHz(backend, m2);
 
-                switch(isDay) {
+                switch (isDay) {
                     case 1:
                         LiveHandler.calculateHz(lotteryDrawResult, mDay1);
                         LiveHandler.calculateHz(backend, mDay12);
@@ -151,28 +167,30 @@ class LiveHandler{
             // 周六开奖统计
             const front6 = LiveHandler.concatArr(mDay6, 35);
             const back6 = LiveHandler.concatArr(mDay62, 12);
-            
-            ctx.body = {code: 0, data: {
-                front, 
-                back,
-                front1,
-                back1,
-                front3,
-                back3,
-                front6,
-                back6,
-            }};
+
+            ctx.body = {
+                code: 0, data: {
+                    front,
+                    back,
+                    front1,
+                    back1,
+                    front3,
+                    back3,
+                    front6,
+                    back6,
+                }
+            };
         } catch (e) {
-            ctx.body = {code:-1, msg: 'searchByParams failed.'};
+            ctx.body = { code: -1, msg: 'searchByParams failed.' };
         }
     }
 
     updateOriginData(ctx, next) {
         try {
             getLotteryData.start();
-            ctx.body = {code: 0, data: 'success'};
+            ctx.body = { code: 0, data: 'success' };
         } catch (e) {
-            ctx.body = {code:-1, msg: 'updateOriginData failed.'};
+            ctx.body = { code: -1, msg: 'updateOriginData failed.' };
         }
     }
 
