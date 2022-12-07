@@ -41,6 +41,30 @@ class LiveHandler {
         return temp;
     }
 
+    async fetchHomePageDetail(ctx) {
+        try {
+            const { type, pageValue } = ctx.request.body;
+            const data = require('../data.json');
+            const baseList = [];
+            for (let i = 0, len = data.length; i < len; i++) {
+                const curDate = data[i].lotteryDrawTime;
+                const isDay = new Date(curDate).getDay();
+                if (Number(type) === 0 || isDay === Number(type)) {
+                    baseList.push(LiveHandler.buildInfoStr(data[i]));
+                }
+                if (baseList.length >= pageValue) break;
+            }
+
+            ctx.body = {
+                code: 0, data: {
+                    baseList
+                }
+            };
+        } catch (e) {
+            ctx.body = { code: -1, msg: 'fetchData failed.' };
+        }
+    }
+
     async fetchData(ctx, next) {
         try {
             let data = require('../data.json');

@@ -28,7 +28,7 @@
     </div>
     <div class="form-zone">
       <van-field
-        v-model="timeZone"
+        v-model="formObj.timeZone"
         is-link
         readonly
         name="picker"
@@ -36,7 +36,7 @@
         placeholder="点击选择时间区间"
         @click="showPicker = true"
       />
-      <van-radio-group v-model="checked" direction="horizontal">
+      <van-radio-group v-model="formObj.type" direction="horizontal" @change="requestData">
         <van-radio name="1">星期一</van-radio>
         <van-radio name="3">星期三</van-radio>
         <van-radio name="6">星期六</van-radio>

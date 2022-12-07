@@ -1,15 +1,15 @@
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import HttpHelper from "common/utils/axiosHelper.js";
-import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO } from "common/urls";
+import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL } from "common/urls";
 // import { countFrontHz, countBackHz } from 'common/utils/renderEcharts';
 import * as echarts from 'echarts';
 const columns = [
-    { text: '近一周', value: 3 },
-    { text: '近一月', value: 12 },
-    { text: '近一季', value: 36 },
-    { text: '近一年', value: 144 },
+    { text: '近3期', value: 3 },
+    { text: '近12期', value: 12 },
+    { text: '近36期', value: 36 },
+    { text: '近144期', value: 144 },
     { text: '全部', value: 1000000 },
 ];
 
@@ -23,24 +23,16 @@ export default {
             showInfo.value = true;
             totalInfo.value = await HttpHelper.axiosPost(FETCH_TOTAL_INFO);
         };
-        // const getFrontData = async () => {
-        //     let data = await HttpHelper.axiosPost(FETCH_DATA);
-        //     // console.log(data);
-        //     return data;
-        // };
-
+        const formObj = reactive({
+            timeZone: '近3期',
+            pageValue: 3,
+            type: '0'  // 默认全部
+        });
+        const list = ref([]);
         const requestData = async () => {
-            // const {front, back, front1, back1, front3, back3, front6, back6,} = await getFrontData();
-            // instanceList.push(await countFrontHz('chart_1', front));
-            // instanceList.push(await countBackHz('chart_2', back));
-            // instanceList.push(await countFrontHz('chart_3', front1, "星期一前区各数值出现频率"));
-            // instanceList.push(await countBackHz('chart_4', back1, "星期一后区各数值出现频率"));
-            // instanceList.push(await countFrontHz('chart_5', front3, "星期三前区各数值出现频率"));
-            // instanceList.push(await countBackHz('chart_6', back3, "星期三后区各数值出现频率"));
-            // instanceList.push(await countFrontHz('chart_7', front6, "星期六前区各数值出现频率"));
-            // instanceList.push(await countBackHz('chart_8', back6, "星期六后区各数值出现频率"));
+            const { baseList } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
+            list.value = baseList;
         };
-
         onMounted(async () => {
             await requestData();
         });
@@ -59,33 +51,33 @@ export default {
             HttpHelper.axiosPost(UPDATE_ORIGIN_DATA);
         };
 
-        const timeZone = ref('近一周');
         const showPicker = ref(false);
 
         const onConfirm = (val) => {
             showPicker.value = false;
-            timeZone.value = columns[val.selectedIndexes[0]].text;
+            formObj.timeZone = columns[val.selectedIndexes[0]].text;
+            formObj.pageValue = columns[val.selectedIndexes[0]].value;
             requestData();
         };
 
         const activeName = ref('a');
         const loading = ref(false);
         const finished = ref(false);
-        const list = ref([]);
-        const onLoad = () => {
-            // todo
+        const onLoad = async () => {
+            await requestData();
         };
 
         return {
             totalInfo,
             showInfo,
-            timeZone,
+            formObj,
             showPicker,
             columns,
             activeName,
             loading,
             finished,
             list,
+            requestData,
             getInfo,
             toDetail,
             updateOriginData,
