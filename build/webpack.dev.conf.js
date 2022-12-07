@@ -15,14 +15,21 @@ module.exports = merge(baseWebpackConfig, {
   mode: 'development',
   module: {
     rules: [
-      {
-        test: /\.(c|le)ss$/,
-        use: [
-             'vue-style-loader',
-            'css-loader',
-            'less-loader',
-        ],
-      },
+        {
+            test: /\.css$/,
+            use: [
+                'vue-style-loader',
+                'css-loader',
+            ],
+        },
+        {
+            test: /\.less$/,
+            use: [
+                'vue-style-loader',
+                'css-loader',
+                'less-loader',
+            ],
+        },
     ]
   },
   // cheap-module-eval-source-map is faster for development

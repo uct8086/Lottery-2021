@@ -1,52 +1,18 @@
 <template>
   <div class="wrapper">
     <div class="header-bar">
-      <button
-        class="el-button el-button--primary"
+      <van-button
+        icon="down"
+        type="primary"
+        size="small"
         @click="updateOriginData"
-      >
-        更新大乐透原始数据
-      </button>
+      />
       <button
         class="el-button el-button--success"
         @click="toDetail"
       >
         查找单个数字相关性
       </button>
-    </div>
-    <div class="chart-zone">
-      <div
-        id="chart_1"
-        class="chart-content"
-      />
-      <div
-        id="chart_2"
-        class="chart-content"
-      />
-      <div
-        id="chart_3"
-        class="chart-content"
-      />
-      <div
-        id="chart_4"
-        class="chart-content"
-      />
-      <div
-        id="chart_5"
-        class="chart-content"
-      />
-      <div
-        id="chart_6"
-        class="chart-content"
-      />
-      <div
-        id="chart_7"
-        class="chart-content"
-      />
-      <div
-        id="chart_8"
-        class="chart-content"
-      />
     </div>
   </div>
 </template>
