@@ -2,6 +2,25 @@ const getLotteryData = require('../getLotteryData');
 
 class LiveHandler {
 
+    static buildInfoStr(Obj) {
+        return `${Obj.lotteryDrawTime} 第${Obj.lotteryDrawNum}期：${Obj.lotteryDrawResult}`;
+    }
+
+    async fetchTotalInfo(ctx) {
+        try {
+            const data = require('../data.json');
+            ctx.body = {
+                code: 0, data: {
+                    total: data.length,
+                    latest: LiveHandler.buildInfoStr(data[0]),
+                    latestDay: data[0].lotteryDrawTime,
+                }
+            };
+        } catch (e) {
+            ctx.body = { code: -1, msg: 'fetchTotalInfo failed.' };
+        }
+    }
+
     static calculateHz(list, m) {
         for (let j = 0, jlen = list.length; j < jlen; j++) {
             const num = list[j];
@@ -36,9 +55,9 @@ class LiveHandler {
 
             for (let i = 0, len = data.length; i < len; i++) {
                 let list = data[i].lotteryDrawResult.split(" ");
-                if (list.includes("32")) {
-                    console.log(111);
-                }
+                // if (list.includes("32")) {
+                //     console.log(111);
+                // }
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
                 let lotteryDrawResult = list.slice(0, 5);

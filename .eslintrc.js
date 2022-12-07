@@ -48,6 +48,8 @@ module.exports = {
         "no-duplicate-case": "error",
         "no-duplicate-imports": "error",
         "no-empty": "error",
-        "vue/no-lone-template": "off"
+        "vue/no-lone-template": "off",
+        "vue/singleline-html-element-content-newline": "off",
+        "vue/max-attributes-per-line": "off"
     }
 };
