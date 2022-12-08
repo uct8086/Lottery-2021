@@ -21,6 +21,11 @@ class LiveHandler {
         }
     }
 
+    /**
+     * 计算频率
+     * @param {Array} list 
+     * @param {Map} m 
+     */
     static calculateHz(list, m) {
         for (let j = 0, jlen = list.length; j < jlen; j++) {
             const num = list[j];
@@ -41,23 +46,43 @@ class LiveHandler {
         return temp;
     }
 
+    static buildPieData(data) {
+        return data.map((item, index) => ({ value: item, name: index + 1}));
+    }
+
     async fetchHomePageDetail(ctx) {
         try {
             const { type, pageValue } = ctx.request.body;
             const data = require('../data.json');
+            const m = new Map();
+            const m2 = new Map();
             const baseList = [];
             for (let i = 0, len = data.length; i < len; i++) {
+                let list = data[i].lotteryDrawResult.split(" ");
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
                 if (Number(type) === 0 || isDay === Number(type)) {
                     baseList.push(LiveHandler.buildInfoStr(data[i]));
+                    let lotteryDrawResult = list.slice(0, 5);
+                    let backend = list.slice(5);
+                    LiveHandler.calculateHz(lotteryDrawResult, m);
+                    LiveHandler.calculateHz(backend, m2);
                 }
                 if (baseList.length >= pageValue) break;
             }
 
+            // 所有日期前后区统计
+            const front = LiveHandler.concatArr(m, 35);
+            const back = LiveHandler.concatArr(m2, 12);
+
+            const pieF = LiveHandler.buildPieData(front);
+            const pieB = LiveHandler.buildPieData(back);
+
             ctx.body = {
                 code: 0, data: {
-                    baseList
+                    baseList,
+                    barChartData: { front, back },
+                    pieChartData: { pieF, pieB }
                 }
             };
         } catch (e) {
@@ -164,16 +189,21 @@ class LiveHandler {
                 let temp = list.map(item => Number(item));
                 let lotteryDrawResult = temp.slice(0, 5);
                 let backend = temp.slice(5);
-                const frontValue = LiveHandler.isIncludes(fr, lotteryDrawResult);
-                // if (frontValue) console.log(frontValue, fr, lotteryDrawResult);
-                if (fr && !frontValue) {
-                    continue;
+                if (fr) {
+                    const frontValue = LiveHandler.isIncludes(fr, lotteryDrawResult);
+                    // if (frontValue) console.log(frontValue, fr, lotteryDrawResult);
+                    if (!frontValue) {
+                        continue;
+                    }
                 }
-                const backValue = LiveHandler.isIncludes(ba, backend);
-                // if (backValue) console.log(backValue, ba, backend);
-                if (ba && !backValue) {
-                    continue;
+                if (ba) {
+                    const backValue = LiveHandler.isIncludes(ba, backend);
+                    // if (backValue) console.log(backValue, ba, backend);
+                    if (!backValue) {
+                        continue;
+                    }
                 }
+               
                 const curDate = data[i].lotteryDrawTime;
                 const isDay = new Date(curDate).getDay();
 

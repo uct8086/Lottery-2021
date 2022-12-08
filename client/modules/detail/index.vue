@@ -1,42 +1,28 @@
 <template>
   <div class="wrapper">
-    <div class="header-bar">
-      <button
-        class="el-button el-button--primary"
-        @click="updateOriginData"
-      >
-        更新大乐透原始数据
-      </button>
-      <button
-        class="el-button el-button--success"
+    <div class="form-zone">
+      <van-button
+        icon="revoke"
+        type="success"
+        size="small"
         @click="toDetail"
       >
-        返回主页
-      </button>
-      <div class="item-search">
-        <span>前区数值：</span>
-        <input
-          id="day-target"
-          v-model="frontValue"
-          type="text"
-          max="35"
-          placeholder="请选择数值"
-          class="el-input__inner"
-          @keyup.enter="search"
-        >
-      </div>
-      <div class="item-search">
-        <span>后区数值：</span>
-        <input
-          id="day-target"
-          v-model="backValue"
-          type="text"
-          max="12"
-          placeholder="请选择数值"
-          class="el-input__inner"
-          @keyup.enter="search"
-        >
-      </div>
+        返回
+      </van-button>
+      <van-field
+        v-model="frontValue"
+        name="前区数值："
+        label="前区数值："
+        placeholder="请输入..."
+        @keyup.enter="search"
+      />
+      <van-field
+        v-model="backValue"
+        name="后区数值："
+        label="后区数值："
+        placeholder="请输入..."
+        @keyup.enter="search"
+      />
     </div>
     <div class="chart-zone">
       <div

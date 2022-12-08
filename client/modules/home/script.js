@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import HttpHelper from "common/utils/axiosHelper.js";
 import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL } from "common/urls";
-// import { countFrontHz, countBackHz } from 'common/utils/renderEcharts';
+import { initBarFront, initBarBack, initPie } from 'common/utils/renderEcharts';
 import * as echarts from 'echarts';
 const columns = [
     { text: '近3期', value: 3 },
@@ -29,9 +29,18 @@ export default {
             type: '0'  // 默认全部
         });
         const list = ref([]);
+        const activeName = ref('a');
         const requestData = async () => {
-            const { baseList } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
+            const { baseList, barChartData: { front, back }, pieChartData: { pieF, pieB } } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
             list.value = baseList;
+            if (activeName.value === 'b') {
+                instanceList.push(await initBarFront('chart_1', front));
+                instanceList.push(await initBarBack('chart_2', back));
+            }
+            if (activeName.value === 'c') {
+                instanceList.push(await initPie('chart_3', pieF));
+                instanceList.push(await initPie('chart_4', pieB));
+            }
         };
         onMounted(async () => {
             await requestData();
@@ -60,10 +69,13 @@ export default {
             requestData();
         };
 
-        const activeName = ref('a');
         const loading = ref(false);
         const finished = ref(false);
         const onLoad = async () => {
+            await requestData();
+        };
+        const tabChange = async (name) => {
+            activeName.value = name;
             await requestData();
         };
 
@@ -82,7 +94,8 @@ export default {
             toDetail,
             updateOriginData,
             onConfirm,
-            onLoad
+            onLoad,
+            tabChange
         };
     }
 };

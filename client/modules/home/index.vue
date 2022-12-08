@@ -53,7 +53,7 @@
         />
       </van-popup>
     </div>
-    <van-tabs :active="activeName">
+    <van-tabs :active="activeName" @change="tabChange">
       <van-tab title="基本" name="a">
         <van-list
           :loading="loading"
@@ -64,8 +64,26 @@
           <van-cell v-for="item in list" :key="item" :title="item" />
         </van-list>
       </van-tab>
-      <van-tab title="柱状图" name="b">内容 2</van-tab>
-      <van-tab title="圆点图" name="c">内容 3</van-tab>
+      <van-tab title="柱状图" name="b" class="chart-zone">
+        <div
+          id="chart_1"
+          class="chart-content"
+        />
+        <div
+          id="chart_2"
+          class="chart-content"
+        />
+      </van-tab>
+      <van-tab title="圆点图" name="c" class="chart-zone">
+        <div
+          id="chart_3"
+          class="chart-content"
+        />
+        <div
+          id="chart_4"
+          class="chart-content"
+        />
+      </van-tab>
     </van-tabs>
     <van-popup v-if="totalInfo" :show="showInfo" position="bottom"
                :style="{ height: '15%', padding: '15px' }" @click-overlay="showInfo = false"
