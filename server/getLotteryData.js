@@ -3,7 +3,7 @@ const fs = require('fs');
 class ForkLottery {
 
     async start() {
-        let page = 1, pages = 75, data = [];
+        let page = 1, totalPages = 10000, data = [];
 
         do {
             let url = `https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=${page}`;
@@ -23,7 +23,8 @@ class ForkLottery {
                 console.log(page);
                 return;
             } else {
-                console.log(page, pages);
+                totalPages = pages;
+                console.log(page, totalPages);
             }
             for (let item of list) {
                 let { lotteryDrawNum,
@@ -36,7 +37,7 @@ class ForkLottery {
                 });
             }
             page++;
-        } while (page <= pages);
+        } while (page <= totalPages);
         const dataPath = `./server/data.json`;
         if (fs.existsSync(dataPath)) {
             fs.rmSync(dataPath);
