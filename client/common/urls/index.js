@@ -1,4 +1,5 @@
-const prefix = 'http://124.222.27.117/';
+// const prefix = 'http://124.222.27.117/';
+const prefix = '';
 
 module.exports = {
     FETCH_DATA: `${prefix}api/fetch_data`,
