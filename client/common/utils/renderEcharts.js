@@ -1,5 +1,5 @@
 import { getTextNumber } from "common/utils/tool";
-import { commonBarOption, commonPieOption } from 'common/utils/echartsOptions';
+import { commonBarOption, commonPieOption, commonParallelOption } from 'common/utils/echartsOptions';
 import * as echarts from 'echarts';
 
 const initBarFront = async (id, data, title) => {
@@ -38,8 +38,19 @@ const initPie = async (id, data) => {
     return myChart;
 };
 
+
+const initParallel = async (id, data) => {
+    // 基于准备好的dom，初始化echarts实例
+    const myChart = echarts.init(document.getElementById(id));
+    const parallelOption = commonParallelOption();
+    parallelOption.series[0].data = data;
+    // 绘制图表
+    myChart.setOption(parallelOption);
+    return myChart;
+};
 export {
     initBarFront,
     initBarBack,
     initPie,
+    initParallel,
 };

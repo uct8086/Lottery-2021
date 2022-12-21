@@ -57,6 +57,7 @@ class LiveHandler {
             const m = new Map();
             const m2 = new Map();
             const baseList = [];
+            const parallelList = [];
             for (let i = 0, len = data.length; i < len; i++) {
                 let list = data[i].lotteryDrawResult.split(" ");
                 const curDate = data[i].lotteryDrawTime;
@@ -67,6 +68,7 @@ class LiveHandler {
                     let backend = list.slice(5);
                     LiveHandler.calculateHz(lotteryDrawResult, m);
                     LiveHandler.calculateHz(backend, m2);
+                    parallelList.push(list);
                 }
                 if (baseList.length >= pageValue) break;
             }
@@ -82,7 +84,8 @@ class LiveHandler {
                 code: 0, data: {
                     baseList,
                     barChartData: { front, back },
-                    pieChartData: { pieF, pieB }
+                    pieChartData: { pieF, pieB },
+                    parallelList,
                 }
             };
         } catch (e) {

@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import HttpHelper from "common/utils/axiosHelper.js";
 import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL } from "common/urls";
-import { initBarFront, initBarBack, initPie } from 'common/utils/renderEcharts';
+import { initBarFront, initBarBack, initPie, initParallel } from 'common/utils/renderEcharts';
 import * as echarts from 'echarts';
 const columns = [
     { text: '近3期', value: 3 },
@@ -31,7 +31,7 @@ export default {
         const list = ref([]);
         const activeName = ref('a');
         const requestData = async () => {
-            const { baseList, barChartData: { front, back }, pieChartData: { pieF, pieB } } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
+            const { baseList, barChartData: { front, back }, pieChartData: { pieF, pieB }, parallelList } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
             list.value = baseList;
             if (activeName.value === 'b') {
                 instanceList.push(await initBarFront('chart_1', front));
@@ -41,8 +41,13 @@ export default {
                 instanceList.push(await initPie('chart_3', pieF));
                 instanceList.push(await initPie('chart_4', pieB));
             }
+            if (activeName.value === 'd') {
+                document.getElementById('chart_5').style.height = `${window.innerHeight - 180}px`;
+                await initParallel('chart_5', parallelList);
+            }
         };
         onMounted(async () => {
+            console.log(window.innerHeight);
             await requestData();
         });
         onUnmounted(() => {

@@ -84,6 +84,12 @@
           class="chart-content"
         />
       </van-tab>
+      <van-tab title="平行坐标" name="d" class="chart-zone">
+        <div
+          id="chart_5"
+          class="chart-content-parallel"
+        />
+      </van-tab>
     </van-tabs>
     <van-popup v-if="totalInfo" :show="showInfo" position="bottom"
                :style="{ height: '15%', padding: '15px' }" @click-overlay="showInfo = false"
@@ -99,6 +105,11 @@
   .chart-content {
     width: 100%;
     height: 300px;
+  }
+
+  .chart-content-parallel {
+    width: 100%;
+    height: 800px;
   }
 
   .header-bar {
