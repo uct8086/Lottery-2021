@@ -107,7 +107,7 @@
     justify-content: space-between;
   }
   .van-tabs__nav {
-    background-color: rgb(94, 96, 96) !important;
+    background-color: #ecf5ff !important;
   }
   .van-tab {
     color: #07c160 !important;
