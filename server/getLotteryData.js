@@ -38,11 +38,17 @@ class ForkLottery {
             }
             page++;
         } while (page <= totalPages);
-        const dataPath = `./server/data.json`;
-        if (fs.existsSync(dataPath)) {
-            fs.rmSync(dataPath);
+        try {
+            const dataPath = `./server/data.json`;
+            const exist = fs.existsSync(dataPath);
+            if (exist) {
+                fs.rmSync(dataPath);
+            }
+            fs.writeFileSync(dataPath, JSON.stringify(data));
+        } catch (e) {
+            console.log(`got lottery data error is : ${e && e.message || ''}`);
         }
-        fs.writeFileSync(dataPath, JSON.stringify(data));
+       
     }
 }
 
