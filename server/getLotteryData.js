@@ -45,7 +45,9 @@ class ForkLottery {
                 await rmSync(dataPath);
             }
             console.log('remove success. ');
-            writeFile(dataPath, JSON.stringify(data));
+            writeFile(dataPath, JSON.stringify(data), (err) => {
+                console.log(err, 'back');
+            });
             console.log('write success. ');
         } catch (e) {
             console.log(`got lottery data error is : ${e && e.message || ''}`);
