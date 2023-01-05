@@ -1,5 +1,5 @@
 const request = require('request');
-const fs = require('fs');
+const { writeFile, existsSync, rmSync} = require('node:fs');
 class ForkLottery {
 
     async start() {
@@ -39,13 +39,13 @@ class ForkLottery {
                 page++;
             } while (page <= totalPages);
             const dataPath = `./server/data.json`;
-            const exist = fs.existsSync(dataPath);
+            const exist = await existsSync(dataPath);
             console.log('exist: ', exist);
             if (exist) {
-                fs.rmSync(dataPath);
+                await rmSync(dataPath);
             }
             console.log('remove success. ');
-            fs.writeFileSync(dataPath, JSON.stringify(data));
+            writeFile(dataPath, JSON.stringify(data));
             console.log('write success. ');
         } catch (e) {
             console.log(`got lottery data error is : ${e && e.message || ''}`);
