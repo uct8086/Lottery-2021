@@ -1,7 +1,7 @@
 
 // see http://vuejs-templates.github.io/webpack for documentation.
 let path = require("path");
-let proxyPort = 9002;
+let proxyPort = 80;
 
 module.exports = {
     build: {
