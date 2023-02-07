@@ -9,10 +9,7 @@
     ],
     "verbose": true,
     "execMap": {
-        "js": "node"
-    },
-    "events": {
-        
+        "js": "npm -v"
     },
     "watch": [
         "src/server/",
@@ -21,5 +18,5 @@
     "env": {
         "NODE_ENV": "local"
     },
-    "ext": "js json"
+    "ext": "js, json"
 }
