@@ -194,7 +194,7 @@ const tabChange = async (name) => {
 <style lang="less">
   .chart-content {
     width: 100%;
-    height: 260px;
+    height: 250px;
   }
 
   .chart-content-parallel {
