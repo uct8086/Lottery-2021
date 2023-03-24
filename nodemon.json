@@ -9,10 +9,10 @@
     ],
     "verbose": true,
     "execMap": {
-        "js": "npm -v"
+        "js": "node"
     },
     "watch": [
-        "src/server/",
+        "server/",
         "app.js"
     ],
     "env": {
