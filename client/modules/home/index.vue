@@ -150,7 +150,7 @@ const requestData = async () => {
         instanceList.push(await initPie('chart_4', pieB));
     }
     if (activeName.value === 'd') {
-        document.getElementById('chart_5').style.height = `${window.innerHeight - 180}px`;
+        document.getElementById('chart_5').style.height = `${window.innerHeight - 268}px`;
         await initParallel('chart_5', parallelList);
     }
 };
@@ -194,7 +194,7 @@ const tabChange = async (name) => {
 <style lang="less">
   .chart-content {
     width: 100%;
-    height: 300px;
+    height: 280px;
   }
 
   .chart-content-parallel {
