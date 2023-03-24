@@ -2,6 +2,58 @@ const getLotteryData = require('../getLotteryData');
 
 class LiveHandler {
 
+    /**
+     * 根据条件，筛选数据
+     * @param {*} ctx 
+     */
+    async fetchHomePageDetail(ctx) {
+        try {
+            const { type, pageValue, frontValue, backValue } = ctx.request.body;
+            const data = require('../data.json');
+            const m = new Map();
+            const m2 = new Map();
+            const baseList = [];
+            const parallelList = [];
+            let total = pageValue;
+            for (let i = 0, len = data.length; i < len; i++) {
+                let list = data[i].lotteryDrawResult.split(" ");
+                const curDate = data[i].lotteryDrawTime;
+                const isDay = new Date(curDate).getDay();
+                let temp = list.map(item => Number(item));
+                let lotteryDrawResult = temp.slice(0, 5);
+                let backend = temp.slice(5);
+                const frontExist = LiveHandler.isIncludes(frontValue, lotteryDrawResult);
+                const backExist = LiveHandler.isIncludes(backValue, backend);
+                total--;
+                if ((Number(type) === 0 || isDay === Number(type)) && (frontExist || backExist || (!frontValue && !backValue))) {
+                    baseList.push(LiveHandler.buildInfoStr(data[i]));
+                    LiveHandler.calculateHz(lotteryDrawResult, m);
+                    LiveHandler.calculateHz(backend, m2);
+                    parallelList.push(list);
+                }
+                if (total <= 0) break;
+            }
+
+            // 所有日期前后区统计
+            const front = LiveHandler.concatArr(m, 35);
+            const back = LiveHandler.concatArr(m2, 12);
+
+            const pieF = LiveHandler.buildPieData(front);
+            const pieB = LiveHandler.buildPieData(back);
+
+            ctx.body = {
+                code: 0, data: {
+                    baseList,
+                    barChartData: { front, back },
+                    pieChartData: { pieF, pieB },
+                    parallelList,
+                }
+            };
+        } catch (e) {
+            ctx.body = { code: -1, msg: 'fetchData failed.' };
+        }
+    }
+
     static buildInfoStr(Obj) {
         return `${Obj.lotteryDrawTime} 第${Obj.lotteryDrawNum}期：${Obj.lotteryDrawResult}`;
     }
@@ -50,215 +102,14 @@ class LiveHandler {
         return data.map((item, index) => ({ value: item, name: index + 1}));
     }
 
-    async fetchHomePageDetail(ctx) {
-        try {
-            const { type, pageValue } = ctx.request.body;
-            const data = require('../data.json');
-            const m = new Map();
-            const m2 = new Map();
-            const baseList = [];
-            const parallelList = [];
-            for (let i = 0, len = data.length; i < len; i++) {
-                let list = data[i].lotteryDrawResult.split(" ");
-                const curDate = data[i].lotteryDrawTime;
-                const isDay = new Date(curDate).getDay();
-                if (Number(type) === 0 || isDay === Number(type)) {
-                    baseList.push(LiveHandler.buildInfoStr(data[i]));
-                    let lotteryDrawResult = list.slice(0, 5);
-                    let backend = list.slice(5);
-                    LiveHandler.calculateHz(lotteryDrawResult, m);
-                    LiveHandler.calculateHz(backend, m2);
-                    parallelList.push(list);
-                }
-                if (baseList.length >= pageValue) break;
-            }
-
-            // 所有日期前后区统计
-            const front = LiveHandler.concatArr(m, 35);
-            const back = LiveHandler.concatArr(m2, 12);
-
-            const pieF = LiveHandler.buildPieData(front);
-            const pieB = LiveHandler.buildPieData(back);
-
-            ctx.body = {
-                code: 0, data: {
-                    baseList,
-                    barChartData: { front, back },
-                    pieChartData: { pieF, pieB },
-                    parallelList,
-                }
-            };
-        } catch (e) {
-            ctx.body = { code: -1, msg: 'fetchData failed.' };
-        }
-    }
-
-    async fetchData(ctx, next) {
-        try {
-            let data = require('../data.json');
-            const m = new Map();
-            const m2 = new Map();
-            const mDay1 = new Map();
-            const mDay12 = new Map();
-            const mDay3 = new Map();
-            const mDay32 = new Map();
-            const mDay6 = new Map();
-            const mDay62 = new Map();
-
-            for (let i = 0, len = data.length; i < len; i++) {
-                let list = data[i].lotteryDrawResult.split(" ");
-                // if (list.includes("32")) {
-                //     console.log(111);
-                // }
-                const curDate = data[i].lotteryDrawTime;
-                const isDay = new Date(curDate).getDay();
-                let lotteryDrawResult = list.slice(0, 5);
-                let backend = list.slice(5);
-                LiveHandler.calculateHz(lotteryDrawResult, m);
-                LiveHandler.calculateHz(backend, m2);
-
-                switch (isDay) {
-                    case 1:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay1);
-                        LiveHandler.calculateHz(backend, mDay12);
-                        break;
-                    case 3:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay3);
-                        LiveHandler.calculateHz(backend, mDay32);
-                        break;
-                    case 6:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay6);
-                        LiveHandler.calculateHz(backend, mDay62);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-            // 所有日期前后区统计
-            const front = LiveHandler.concatArr(m, 35);
-            const back = LiveHandler.concatArr(m2, 12);
-            // 周一开奖统计
-            const front1 = LiveHandler.concatArr(mDay1, 35);
-            const back1 = LiveHandler.concatArr(mDay12, 12);
-            // 周三开奖统计
-            const front3 = LiveHandler.concatArr(mDay3, 35);
-            const back3 = LiveHandler.concatArr(mDay32, 12);
-            // 周六开奖统计
-            const front6 = LiveHandler.concatArr(mDay6, 35);
-            const back6 = LiveHandler.concatArr(mDay62, 12);
-
-            ctx.body = {
-                code: 0, data: {
-                    front,
-                    back,
-                    front1,
-                    back1,
-                    front3,
-                    back3,
-                    front6,
-                    back6,
-                }
-            };
-        } catch (e) {
-            ctx.body = { code: -1, msg: 'fetchData failed.' };
-        }
-    }
-
     static isIncludes(str, targetList) {
+        if (!str) return false;
         const list = str.split('-') || [];
         for (let i = 0, len = list.length; i < len; i++) {
             const t = targetList.findIndex((item) => item === Number(list[i]));
             if (t === -1) return false;
         }
         return true;
-    }
-
-    searchByParams(ctx, next) {
-        try {
-            const { front: fr, back: ba } = ctx.request.body;
-            let data = require('../data.json');
-            const m = new Map();
-            const m2 = new Map();
-            const mDay1 = new Map();
-            const mDay12 = new Map();
-            const mDay3 = new Map();
-            const mDay32 = new Map();
-            const mDay6 = new Map();
-            const mDay62 = new Map();
-
-            for (let i = 0, len = data.length; i < len; i++) {
-                let list = data[i].lotteryDrawResult.split(" ");
-                let temp = list.map(item => Number(item));
-                let lotteryDrawResult = temp.slice(0, 5);
-                let backend = temp.slice(5);
-                if (fr) {
-                    const frontValue = LiveHandler.isIncludes(fr, lotteryDrawResult);
-                    // if (frontValue) console.log(frontValue, fr, lotteryDrawResult);
-                    if (!frontValue) {
-                        continue;
-                    }
-                }
-                if (ba) {
-                    const backValue = LiveHandler.isIncludes(ba, backend);
-                    // if (backValue) console.log(backValue, ba, backend);
-                    if (!backValue) {
-                        continue;
-                    }
-                }
-               
-                const curDate = data[i].lotteryDrawTime;
-                const isDay = new Date(curDate).getDay();
-
-                LiveHandler.calculateHz(lotteryDrawResult, m);
-                LiveHandler.calculateHz(backend, m2);
-
-                switch (isDay) {
-                    case 1:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay1);
-                        LiveHandler.calculateHz(backend, mDay12);
-                        break;
-                    case 3:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay3);
-                        LiveHandler.calculateHz(backend, mDay32);
-                        break;
-                    case 6:
-                        LiveHandler.calculateHz(lotteryDrawResult, mDay6);
-                        LiveHandler.calculateHz(backend, mDay62);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-            // 所有日期前后区统计
-            const front = LiveHandler.concatArr(m, 35);
-            const back = LiveHandler.concatArr(m2, 12);
-            // 周一开奖统计
-            const front1 = LiveHandler.concatArr(mDay1, 35);
-            const back1 = LiveHandler.concatArr(mDay12, 12);
-            // 周三开奖统计
-            const front3 = LiveHandler.concatArr(mDay3, 35);
-            const back3 = LiveHandler.concatArr(mDay32, 12);
-            // 周六开奖统计
-            const front6 = LiveHandler.concatArr(mDay6, 35);
-            const back6 = LiveHandler.concatArr(mDay62, 12);
-
-            ctx.body = {
-                code: 0, data: {
-                    front,
-                    back,
-                    front1,
-                    back1,
-                    front3,
-                    back3,
-                    front6,
-                    back6,
-                }
-            };
-        } catch (e) {
-            ctx.body = { code: -1, msg: 'searchByParams failed.' };
-        }
     }
 
     updateOriginData(ctx, next) {
