@@ -1,5 +1,6 @@
 const request = require('request');
-const { writeFile, existsSync, rmSync} = require('node:fs');
+const path = require('path');
+const { writeFile, existsSync, rmSync, createReadStream, createWriteStream } = require('node:fs');
 class ForkLottery {
 
     async start() {
@@ -40,12 +41,26 @@ class ForkLottery {
             } while (page <= totalPages);
             const dataPath = `./server/data.json`;
             const exist = await existsSync(dataPath);
+            let historyData = [];
             console.log('exist: ', exist);
             if (exist) {
+                historyData = require(path.join(__dirname, '../server/data.json'));
+                const backupPath = `./server/data-${+new Date()}.json`;
+                // 备份文件
+                createReadStream(dataPath).pipe(createWriteStream(backupPath));
+                // 删除旧文件
                 await rmSync(dataPath);
             }
             console.log('remove success. ');
-            writeFile(dataPath, JSON.stringify(data), (err) => {
+            // 增量更新
+            if (historyData.length) {
+                const newData  = data.filter((item) => item.lotteryDrawNum > historyData[0].lotteryDrawNum);
+                historyData = newData.concat(historyData);
+            } else {
+                historyData = data;
+            }
+            
+            writeFile(dataPath, JSON.stringify(historyData), (err) => {
                 console.log(err, 'back');
             });
             console.log('write success. ');
