@@ -147,7 +147,9 @@ const columns = [
     { text: '近3期', value: 3 },
     { text: '近12期', value: 12 },
     { text: '近36期', value: 36 },
+    { text: '近72期', value: 72 },
     { text: '近144期', value: 144 },
+    { text: '近288期', value: 288 },
     { text: '全部', value: 1000000 },
 ];
 let instanceList = [];
