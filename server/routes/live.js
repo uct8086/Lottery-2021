@@ -6,6 +6,7 @@ const LiveHandler = require('../handler/liveHandler');
 router.post('/api/update_origin_data', LiveHandler.updateOriginData);
 router.post('/api/fetch_total_info', LiveHandler.fetchTotalInfo);
 router.post('/api/fetch_home_detail', LiveHandler.fetchHomePageDetail);
+router.post('/api/generate_nums', LiveHandler.generateNums);
 
 
 module.exports = router;

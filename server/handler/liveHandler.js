@@ -73,6 +73,49 @@ class LiveHandler {
         }
     }
 
+    // 智能随机，排序不常用的号码
+    async generateNums(ctx) {
+        try {
+            const { frontExcept, endExcept } = ctx.request.body;
+            let exceptList = frontExcept.split(' ');
+            exceptList = Array.from(new Set(exceptList));
+            let exceptEnd = endExcept.split(' ');
+            exceptEnd = Array.from(new Set(exceptEnd));
+            let result = [], front = [], end = [];
+            let i = 0;
+            while(i < 10){
+                // 前区
+                do {
+                    const frontNow = String(Math.floor((Math.random()*36)));
+                    if (frontNow !== '0' && !exceptList.includes(frontNow) && !front.includes(frontNow) && front.length < 5) {
+                        front.push(frontNow);
+                    }
+                } while (front.length !== 5);
+                // 后区
+                do {
+                    const endNow = String(Math.floor((Math.random()*13)));
+                    if (endNow !== '0' && !exceptEnd.includes(endNow) && !end.includes(endNow) && end.length < 2) {
+                        end.push(endNow);
+                    }
+                } while (end.length !== 2);
+                // + 0 处理
+                front = front.map((item) => Number(item) < 10 ? `0${item}` : item);
+                end = end.map((item) => Number(item) < 10 ? `0${item}` : item);
+                // 拼接并且排序
+                result.push(`${front.sort((a, b) => a - b).join('-')}  ${end.sort((a, b) => a - b).join('-')}`);
+                front = [];
+                end = [];
+                i++;
+            }
+
+            ctx.body = {
+                code: 0, data: result
+            };
+        } catch (e) {
+            ctx.body = { code: -1, msg: 'generateNums failed.' };
+        }
+    }
+
     /**
      * 计算频率
      * @param {Array} list 

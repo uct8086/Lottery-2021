@@ -60,6 +60,34 @@
       </van-popup>
     </div>
     <van-tabs :active="activeName" @change="tabChange">
+      <van-tab title="机选" name="m">
+        <div class="except-zone">
+          <div class="diy-except">
+            <van-field
+              v-model="formObj.frontExcept"
+              name="前排除："
+              label="前排除："
+              placeholder="请输入..."
+              @keyup.enter="requestData"
+            />
+            <van-field
+              v-model="formObj.endExcept"
+              name="后排除："
+              label="后排除："
+              placeholder="请输入..."
+              @keyup.enter="requestData"
+            />
+          </div>
+          <van-button type="primary" size="small" @click="generateNum">
+            确定
+          </van-button>
+        </div>
+        <van-list
+          finished-text="没有更多了"
+        >
+          <van-cell v-for="item in numList" :key="item" :title="item" />
+        </van-list>
+      </van-tab>
       <van-tab title="基本" name="a">
         <van-list
           :loading="loading"
@@ -111,7 +139,7 @@
 import { onMounted, onUnmounted, ref, reactive } from 'vue';
 import { showToast } from 'vant';
 import HttpHelper from "common/utils/axiosHelper.js";
-import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL } from "common/urls";
+import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL, GENERATE_NUMS } from "common/urls";
 import { initBarFront, initBarBack, initPie, initParallel } from 'common/utils/renderEcharts';
 import * as echarts from 'echarts';
 
@@ -135,9 +163,11 @@ const formObj = reactive({
     type: '0',  // 默认全部
     frontValue: '', // 前区数值
     backValue: '', // 后区数值
+    frontExcept: '', // 排除数值
+    endExcept: '', // 排除数值
 });
 const list = ref([]);
-const activeName = ref('a');
+const activeName = ref('m');
 const requestData = async () => {
     const { baseList, barChartData: { front, back }, pieChartData: { pieF, pieB }, parallelList } = await HttpHelper.axiosPost(FETCH_HOME_DETAIL, formObj);
     list.value = baseList;
@@ -189,6 +219,13 @@ const tabChange = async (name) => {
     await requestData();
 };
 
+const numList = ref([]);
+const generateNum = async () => {
+    const res = await HttpHelper.axiosPost(GENERATE_NUMS, formObj);
+    console.log(res);
+    numList.value = res;
+};
+
     
 </script>
 <style lang="less">
@@ -208,7 +245,7 @@ const tabChange = async (name) => {
     justify-content: space-between;
   }
   .van-tabs__nav {
-    background-color: #ecf5ff !important;
+    background-color: #1d1226 !important;
   }
   .van-tab {
     color: #07c160 !important;
@@ -217,5 +254,12 @@ const tabChange = async (name) => {
     padding: 10px;
     display: flex;
     justify-content: space-around;
+  }
+  .except-zone {
+    display: flex;
+    align-items: center;
+  }
+  .diy-except {
+    width: 85% !important;
   }
 </style>
