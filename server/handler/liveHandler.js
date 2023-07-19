@@ -83,7 +83,7 @@ class LiveHandler {
             exceptEnd = Array.from(new Set(exceptEnd));
             let result = [], front = [], end = [];
             let i = 0;
-            while(i < 10){
+            while(i < 5){
                 // 前区
                 do {
                     const frontNow = String(Math.floor((Math.random()*36)));
