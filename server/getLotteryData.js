@@ -44,7 +44,12 @@ class ForkLottery {
             let historyData = [];
             console.log('exist: ', exist);
             if (exist) {
-                historyData = require(path.join(__dirname, '../server/data.json'));
+                try {
+                    historyData = require(path.join(__dirname, '../server/data.json'));
+                } catch (e) {
+                    historyData = [];
+                }
+                
                 const backupPath = `./server/data-${+new Date()}.json`;
                 // 备份文件
                 createReadStream(dataPath).pipe(createWriteStream(backupPath));
