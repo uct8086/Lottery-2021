@@ -4,7 +4,7 @@ const { writeFile, existsSync, rmSync, createReadStream, createWriteStream } = r
 class ForkLottery {
 
     async start() {
-        let page = 1, totalPages = 10000, data = [];
+        let page = 1, totalPages = 10000, data = [], ;
         try {
             do {
                 let url = `https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=${page}`;
@@ -59,8 +59,14 @@ class ForkLottery {
             console.log('remove success. ');
             // 增量更新
             if (historyData.length) {
-                const newData  = data.filter((item) => item.lotteryDrawNum > historyData[0].lotteryDrawNum);
-                historyData = newData.concat(historyData);
+                // const newData  = data.filter((item) => item.lotteryDrawNum > historyData[0].lotteryDrawNum);
+                historyData = data.concat(historyData);
+                const tempMap = new Map();
+                historyData.forEach(qi => {
+                    tempMap.set(qi.lotteryDrawNum, qi);
+                });
+                historyData = Array.from(tempMap.values());  
+                console.log('增量更新总长度：', historyData.length)
             } else {
                 historyData = data;
             }
