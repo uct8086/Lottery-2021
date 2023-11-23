@@ -4,7 +4,7 @@ const { writeFile, existsSync, rmSync, createReadStream, createWriteStream } = r
 class ForkLottery {
 
     async start() {
-        let page = 1, totalPages = 10000, data = [], ;
+        let page = 1, totalPages = 10000, data = [];
         try {
             do {
                 let url = `https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&pageSize=30&isVerify=1&pageNo=${page}`;
