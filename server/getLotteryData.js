@@ -66,7 +66,7 @@ class ForkLottery {
                     tempMap.set(qi.lotteryDrawNum, qi);
                 });
                 historyData = Array.from(tempMap.values());  
-                console.log('增量更新总长度：', historyData.length)
+                console.log('增量更新总长度：', historyData.length);
             } else {
                 historyData = data;
             }

@@ -6,10 +6,11 @@ const onerror = require('koa-onerror'); //错误处理
 const resource = require('koa-static');//静态资源托管
 const { historyApiFallback } = require('koa2-connect-history-api-fallback'); 
 const path = require('path');
-
-
 const routes = require('./server/routes/index');
 const config = require('./build/config');
+const urls = require('./client/common/urls/index');
+
+const urlArray = Object.values(urls);
 
 const app = new Koa();
 
@@ -25,6 +26,11 @@ app.use(bodyParser());
 app.use(resource(path.join(__dirname, './public')));
 
 app.use(async (ctx, next) => {
+    if (!urlArray.includes(ctx.url)) {
+        ctx.body = 'fuck you !!!';
+        ctx.status = 200;
+        return;
+    }
     const start = new Date();
     await next();
     const ms = new Date() - start;
