@@ -26,7 +26,7 @@ app.use(bodyParser());
 app.use(resource(path.join(__dirname, './public')));
 
 app.use(async (ctx, next) => {
-    if (!urlArray.includes(ctx.url.slice(1, ctx.url.length - 1))) {
+    if (!urlArray.includes(ctx.url.slice(1, ctx.url.length))) {
         ctx.body = 'fuck you !!!';
         ctx.status = 200;
         return;
