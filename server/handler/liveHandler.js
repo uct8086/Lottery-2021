@@ -25,7 +25,7 @@ class LiveHandler {
                 const frontExist = LiveHandler.isIncludes(frontValue, lotteryDrawResult);
                 const backExist = LiveHandler.isIncludes(backValue, backend);
                 total--;
-                if ((Number(type) === 0 || isDay === Number(type)) && (frontExist || backExist || (!frontValue && !backValue))) {
+                if ((Number(type) === 0 || (isDay === Number(type)) && (frontExist || backExist || (!frontValue && !backValue)))) {
                     baseList.push(LiveHandler.buildInfoStr(data[i]));
                     LiveHandler.calculateHz(lotteryDrawResult, m);
                     LiveHandler.calculateHz(backend, m2);
