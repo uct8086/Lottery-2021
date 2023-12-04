@@ -1,3 +1,5 @@
+
+// 布伦克-瓦里安相关算法实现
 function blomqvistBeta(x, y) {
     if (x.length !== y.length) {
         throw new Error('Input arrays must have the same length');
