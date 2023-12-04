@@ -29,7 +29,6 @@ module.exports = {
         "indent": ["error", 4, {
             "SwitchCase": 1
         }],
-        "linebreak-style": ["error", "windows"],
         "semi": ["error", "always"],
         "comma-dangle": ["warn", {
             "arrays": "ignore",
