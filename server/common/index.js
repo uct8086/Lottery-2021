@@ -48,6 +48,22 @@ function calculateQuartiles(arr) {
     ];
 }
 
+// 计算组合数
+function combination(n, m) {
+    if (m > n || m < 0 || n < 0) {
+        return 0;
+    }
+    let result = 1;
+    for (let i = n; i >= n - m + 1; i--) {
+        result *= i;
+    }
+    for (let i = 2; i <= m; i++) {
+        result /= i;
+    }
+    return result;
+}
+
 module.exports = {
     blomqvistBeta,
+    combination,
 };
