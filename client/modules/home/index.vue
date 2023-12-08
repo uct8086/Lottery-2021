@@ -137,28 +137,28 @@
 <script setup>
 
 import { onMounted, onUnmounted, ref, reactive } from 'vue';
-// import { showToast } from 'vant';
+import { showToast } from 'vant';
 import HttpHelper from "common/utils/axiosHelper.js";
-import { FETCH_HOME_DETAIL } from "common/urls";
+import { UPDATE_ORIGIN_DATA, FETCH_TOTAL_INFO, FETCH_HOME_DETAIL, GENERATE_NUMS } from "common/urls";
 import { initBarFront, initBarBack, initPie, initParallel } from 'common/utils/renderEcharts';
 import * as echarts from 'echarts';
 
-// const columns = [
-//     { text: '近3期', value: 3 },
-//     { text: '近12期', value: 12 },
-//     { text: '近36期', value: 36 },
-//     { text: '近72期', value: 72 },
-//     { text: '近144期', value: 144 },
-//     { text: '近288期', value: 288 },
-//     { text: '全部', value: 1000000 },
-// ];
+const columns = [
+    { text: '近3期', value: 3 },
+    { text: '近12期', value: 12 },
+    { text: '近36期', value: 36 },
+    { text: '近72期', value: 72 },
+    { text: '近144期', value: 144 },
+    { text: '近288期', value: 288 },
+    { text: '全部', value: 1000000 },
+];
 let instanceList = [];
-// const totalInfo = ref(null);
-// const showInfo = ref(false);
-// const getInfo = async() => {
-//     showInfo.value = true;
-//     totalInfo.value = await HttpHelper.axiosPost(FETCH_TOTAL_INFO);
-// };
+const totalInfo = ref(null);
+const showInfo = ref(false);
+const getInfo = async() => {
+    showInfo.value = true;
+    totalInfo.value = await HttpHelper.axiosPost(FETCH_TOTAL_INFO);
+};
 const formObj = reactive({
     timeZone: '近3期',
     pageValue: 3,
@@ -197,36 +197,36 @@ onUnmounted(() => {
     instanceList = [];
 });
 
-// const updateOriginData = () => {
-//     HttpHelper.axiosPost(UPDATE_ORIGIN_DATA);
-//     showToast('成功触发更新！');
-// };
+const updateOriginData = () => {
+    HttpHelper.axiosPost(UPDATE_ORIGIN_DATA);
+    showToast('成功触发更新！');
+};
 
-// const showPicker = ref(false);
+const showPicker = ref(false);
 
-// const onConfirm = (val) => {
-//     showPicker.value = false;
-//     formObj.timeZone = columns[val.selectedIndexes[0]].text;
-//     formObj.pageValue = columns[val.selectedIndexes[0]].value;
-//     requestData();
-// };
+const onConfirm = (val) => {
+    showPicker.value = false;
+    formObj.timeZone = columns[val.selectedIndexes[0]].text;
+    formObj.pageValue = columns[val.selectedIndexes[0]].value;
+    requestData();
+};
 
-// const loading = ref(false);
-// const finished = ref(false);
-// const onLoad = async () => {
-//     await requestData();
-// };
-// const tabChange = async (name) => {
-//     activeName.value = name;
-//     await requestData();
-// };
+const loading = ref(false);
+const finished = ref(false);
+const onLoad = async () => {
+    await requestData();
+};
+const tabChange = async (name) => {
+    activeName.value = name;
+    await requestData();
+};
 
-// const numList = ref([]);
-// const generateNum = async () => {
-//     const res = await HttpHelper.axiosPost(GENERATE_NUMS, formObj);
-//     console.log(res);
-//     numList.value = res;
-// };
+const numList = ref([]);
+const generateNum = async () => {
+    const res = await HttpHelper.axiosPost(GENERATE_NUMS, formObj);
+    console.log(res);
+    numList.value = res;
+};
 
     
 </script>
