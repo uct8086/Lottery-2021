@@ -1,20 +1,25 @@
 {
   "name": "lottery-2021",
   "version": "1.0.1",
-  "description": "",
-  "author": "uct8086",
   "private": true,
-  "main": "app.js",
-  "scripts": {
-    "start": "node build/dev-server.js --stats-error-details",
-    "test": "npx cross-env NODE_OPTIONS='--trace-warnings' node build/dev-server.js",
-    "build": "node build/build.js",
-    "server": "nodemon app.js"
-  },
+  "description": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/uct8086/Lottery-2021.git"
   },
+  "author": "uct8086",
+  "main": "app.js",
+  "scripts": {
+    "build": "node build/build.js",
+    "server": "nodemon app.js",
+    "start": "node build/dev-server.js --stats-error-details",
+    "test": "npx cross-env NODE_OPTIONS='--trace-warnings' node build/dev-server.js"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
   "dependencies": {
     "@babel/runtime": "7.11.2",
     "@babel/runtime-corejs3": "7.11.2",
@@ -98,10 +103,5 @@
   "engines": {
     "node": ">=16",
     "npm": ">=5.6.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  }
 }

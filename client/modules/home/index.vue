@@ -125,8 +125,9 @@
         />
       </van-tab>
     </van-tabs>
-    <van-popup v-if="totalInfo" :show="showInfo" position="bottom"
-               :style="{ height: '15%', padding: '15px' }" @click-overlay="showInfo = false"
+    <van-popup
+      v-if="totalInfo" :show="showInfo" position="bottom"
+      :style="{ height: '15%', padding: '15px' }" @click-overlay="showInfo = false"
     >
       <div>共{{ totalInfo.total }}条记录</div>
       <div>最新日期：{{ totalInfo.latestDay }}</div>
