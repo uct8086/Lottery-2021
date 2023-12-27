@@ -31,7 +31,7 @@ class LiveHandler {
                     continue;
                 }
                 // 按数值过滤
-                if (frontExist || backExist || (!frontValue && !backValue)) {
+                if ((frontExist && !backValue) || (backExist && !frontValue) || (frontExist && backExist) || (!frontValue && !backValue)) {
                     baseList.push(LiveHandler.buildInfoStr(data[i]));
                     LiveHandler.calculateHz(lotteryDrawResult, m);
                     LiveHandler.calculateHz(backend, m2);
