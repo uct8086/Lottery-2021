@@ -24,14 +24,19 @@ class LiveHandler {
                 let backend = temp.slice(5);
                 const frontExist = LiveHandler.isIncludes(frontValue, lotteryDrawResult);
                 const backExist = LiveHandler.isIncludes(backValue, backend);
+                if (total <= 0) break;
                 total--;
-                if ((Number(type) === 0 || (isDay === Number(type)) && (frontExist || backExist || (!frontValue && !backValue)))) {
+                // 按日期过滤
+                if (Number(type) !== 0 && isDay !== Number(type)) {
+                    continue;
+                }
+                // 按数值过滤
+                if (frontExist || backExist || (!frontValue && !backValue)) {
                     baseList.push(LiveHandler.buildInfoStr(data[i]));
                     LiveHandler.calculateHz(lotteryDrawResult, m);
                     LiveHandler.calculateHz(backend, m2);
                     parallelList.push(list);
                 }
-                if (total <= 0) break;
             }
 
             // 所有日期前后区统计
